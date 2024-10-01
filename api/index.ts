@@ -11,10 +11,6 @@ import express from "express";
 
 const app = express();
 
-const client = createClient({ url: process.env.DATABASE_URL!, authToken: process.env.DATABASE_AUTH_TOKEN! });
-
-const db = drizzle(client);
-
 app.get("/", async (req, res) => {
 	const date = req.query.date as string;
 
@@ -32,6 +28,10 @@ app.get("/", async (req, res) => {
 			minute: 0,
 		})
 		.toDate("America/Sao_Paulo");
+
+	const client = createClient({ url: process.env.DATABASE_URL!, authToken: process.env.DATABASE_AUTH_TOKEN! });
+
+	const db = drizzle(client);
 
 	const result = await db
 		.select({
