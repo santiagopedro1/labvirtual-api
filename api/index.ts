@@ -3,13 +3,17 @@ import { createClient } from "@libsql/client";
 
 import { and, asc, gte, lte } from "drizzle-orm";
 
-import { sensorData } from "../db-schema";
+import { sensorData } from "../db-schema.ts";
 
 import { parseDateTime } from "@internationalized/date";
 
 import express from "express";
 
 const app = express();
+
+const client = createClient({ url: process.env.DATABASE_URL!, authToken: process.env.DATABASE_AUTH_TOKEN! });
+
+const db = drizzle(client);
 
 app.get("/", async (req, res) => {
 	const date = req.query.date as string;
@@ -29,10 +33,6 @@ app.get("/", async (req, res) => {
 		})
 		.toDate("America/Sao_Paulo");
 
-	const client = createClient({ url: process.env.DATABASE_URL!, authToken: process.env.DATABASE_AUTH_TOKEN! });
-
-	const db = drizzle(client);
-
 	const result = await db
 		.select({
 			id_sensor: sensorData.sensor_id,
@@ -45,10 +45,6 @@ app.get("/", async (req, res) => {
 		.limit(2);
 
 	res.status(200).json(result);
-});
-
-app.listen(3000, () => {
-	console.log("http://localhost:3000");
 });
 
 export default app;
