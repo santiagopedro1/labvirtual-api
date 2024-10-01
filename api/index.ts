@@ -9,7 +9,11 @@ import { parseDateTime } from "@internationalized/date";
 
 import express from "express";
 
+import cors from "cors";
+
 const app = express();
+
+app.use(cors());
 
 const client = createClient({ url: process.env.DATABASE_URL!, authToken: process.env.DATABASE_AUTH_TOKEN! });
 
