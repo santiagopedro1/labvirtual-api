@@ -57,8 +57,7 @@ app.get("/", async (req, res) => {
 		})
 		.from(sensorData)
 		.where(and(lte(sensorData.timestamp, end), gte(sensorData.timestamp, start)))
-		.orderBy(asc(sensorData.timestamp))
-		.limit(2);
+		.orderBy(asc(sensorData.timestamp));
 
 	res.status(200).json(result);
 });
