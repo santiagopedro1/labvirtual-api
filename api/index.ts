@@ -3,7 +3,7 @@ import { createClient } from "@libsql/client";
 
 import { and, asc, gte, lte } from "drizzle-orm";
 
-import { sensorData } from "../db-schema.ts";
+import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
 
 import { parseDateTime } from "@internationalized/date";
 
@@ -14,6 +14,16 @@ const app = express();
 const client = createClient({ url: process.env.DATABASE_URL!, authToken: process.env.DATABASE_AUTH_TOKEN! });
 
 const db = drizzle(client);
+
+const sensorData = sqliteTable("leitura_sensor", {
+	sensor_id: text("id_sensor").notNull(),
+	data: text("dados", { mode: "json" })
+		.$type<{
+			[key: string]: number;
+		}>()
+		.notNull(),
+	timestamp: integer("timestamp", { mode: "timestamp" }).notNull(),
+});
 
 app.get("/", async (req, res) => {
 	const date = req.query.date as string;
