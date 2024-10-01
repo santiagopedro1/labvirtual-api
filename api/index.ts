@@ -18,6 +18,8 @@ const db = drizzle(client);
 app.get("/", async (req, res) => {
 	const date = req.query.date as string;
 
+	console.log("oie");
+
 	const start = parseDateTime(date)
 		.set({
 			hour: 0,
